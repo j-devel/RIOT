@@ -8,6 +8,12 @@ ifneq (,$(filter lvgl_contrib,$(USEMODULE)))
   DIRS += $(RIOTBASE)/pkg/lvgl/contrib
 endif
 
+ifneq (,$(filter lvgl_sdl,$(USEMODULE)))
+  INCLUDES += -I$(RIOTBASE)/pkg/lvgl/sdl
+  LINKFLAGS += $(shell sdl2-config --libs)
+  DIRS += $(RIOTBASE)/pkg/lvgl/sdl
+endif
+
 # Configuration options
 # Graphical settings
 LVGL_COLOR_DEPTH        ?= 16

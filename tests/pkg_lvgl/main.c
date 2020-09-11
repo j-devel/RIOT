@@ -25,14 +25,79 @@
 #include "lvgl/lvgl.h"
 #include "lvgl_riot.h"
 
-#include "screen_dev.h"
+#ifdef USE_LVGL_SDL
+#define TEST_OUTPUT 2
+#else
+#define TEST_OUTPUT 1
+#endif
 
+#define TEST_OUTPUT_ILI9341 1
+#define TEST_OUTPUT_SDL 2
+
+#ifndef TEST_OUTPUT
+#error "TEST_OUTPUT not defined"
+#endif
+
+#if TEST_OUTPUT == TEST_OUTPUT_ILI9341
 #include "ili9341.h"
 #include "ili9341_params.h"
 #include "disp_dev.h"
 #include "ili9341_disp_dev.h"
 
 static ili9341_t s_disp_dev;
+#endif
+
+#if TEST_OUTPUT == TEST_OUTPUT_SDL
+#include "disp_dev.h"
+#include "touch_dev.h"
+#include "lvgl_sdl.h"
+
+#define SDL_HEIGHT 240
+#define SDL_WIDTH 320
+
+static disp_dev_t s_disp_dev;
+static touch_dev_t s_touch_dev;
+
+/* c.f. RIOT/drivers/ili9341/ili9341_disp_dev.c */
+static uint16_t _sdl_disp_height(const disp_dev_t *disp_dev)
+{
+    (void)disp_dev;
+    return SDL_HEIGHT;
+}
+static uint16_t _sdl_disp_width(const disp_dev_t *disp_dev)
+{
+    (void)disp_dev;
+    return SDL_WIDTH;
+}
+static disp_dev_driver_t sdl_disp_dev_driver = {
+    /* .map            = _sdl_map,
+     * To be overriden with `monitor_flush()` in pkg/lvgl/contrib/lvgl.c */
+    .height         = _sdl_disp_height,
+    .width          = _sdl_disp_width,
+    /* .color_depth    = _sdl_color_depth, */
+    /* .set_invert     = _sdl_set_invert, */
+};
+
+/* c.f. RIOT/drivers/stmpe811/stmpe811_touch_dev.c */
+static uint16_t _sdl_touch_height(const touch_dev_t *touch_dev)
+{
+    (void)touch_dev;
+    return SDL_HEIGHT;
+}
+static uint16_t _sdl_touch_width(const touch_dev_t *touch_dev)
+{
+    (void)touch_dev;
+    return SDL_WIDTH;
+}
+const touch_dev_driver_t sdl_touch_dev_driver = {
+    .height     = _sdl_touch_height,
+    .width      = _sdl_touch_width,
+    /* .touches    = _sdl_touches, */
+};
+#endif
+
+#include "screen_dev.h"
+
 static screen_dev_t s_screen;
 
 #define CPU_LABEL_COLOR     "FF0000"
@@ -128,6 +193,7 @@ void sysmon_create(void)
 
 int main(void)
 {
+#if TEST_OUTPUT == TEST_OUTPUT_ILI9341
     /* Configure the generic display driver interface */
     s_screen.display = (disp_dev_t *)&s_disp_dev;
     s_screen.display->driver = &ili9341_disp_dev_driver;
@@ -140,6 +206,23 @@ int main(void)
 
     /* Initialize lvgl with the generic display and touch drivers */
     lvgl_init(&s_screen);
+#endif
+
+#if TEST_OUTPUT == TEST_OUTPUT_SDL
+  #if 0
+    main_simulator(0, NULL); /* via lvgl_sdl.h */
+    return 0;
+  #endif
+
+    s_screen.display = (disp_dev_t *)&s_disp_dev;
+    s_screen.display->driver = &sdl_disp_dev_driver;
+    s_screen.touch = (touch_dev_t *)&s_touch_dev;
+    s_screen.touch->driver = &sdl_touch_dev_driver;
+    lvgl_init(&s_screen);
+
+    monitor_init(); /* via lvgl_sdl.h */
+    mouse_init(); /* via lvgl_sdl.h */
+#endif
 
     /* Create the system monitor widget */
     sysmon_create();

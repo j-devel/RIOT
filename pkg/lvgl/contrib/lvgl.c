@@ -28,6 +28,10 @@
 #include "lv_conf.h"
 #include "lvgl_riot.h"
 
+#ifdef USE_LVGL_SDL
+#include "lvgl_sdl.h"
+#endif
+
 #include "screen_dev.h"
 
 #ifndef LVGL_TASK_THREAD_PRIO
@@ -139,8 +143,12 @@ void lvgl_init(screen_dev_t *screen_dev)
        underlying display device parameters */
     disp_drv.hor_res = disp_dev_width(screen_dev->display);
     disp_drv.ver_res = disp_dev_height(screen_dev->display);
-
+#ifdef USE_LVGL_SDL
+    (void)_disp_map;
+    disp_drv.flush_cb = monitor_flush;
+#else
     disp_drv.flush_cb = _disp_map;
+#endif
     disp_drv.buffer = &disp_buf;
     lv_disp_drv_register(&disp_drv);
     lv_disp_buf_init(&disp_buf, buf, NULL, LVGL_COLOR_BUF_SIZE);
@@ -150,8 +158,14 @@ void lvgl_init(screen_dev_t *screen_dev)
     lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);
     indev_drv.type = LV_INDEV_TYPE_POINTER;
+  #ifdef USE_LVGL_SDL
+    (void)_touch_read;
+    indev_drv.read_cb = mouse_read;
+    lv_indev_drv_register(&indev_drv);
+  #else
     indev_drv.read_cb = _touch_read;
     lv_indev_drv_register(&indev_drv);
+  #endif
 #endif
 
     lv_task_handler();

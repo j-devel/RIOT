@@ -20,3 +20,12 @@ The application displays a basic system monitor with the CPU and memory
 usage of the board.
 Note that on the pinetime, due to a too small screen resolution, some
 information is cropped.
+
+### Building native application with SDL backend
+
+To facilitate developing/debugging LVGL applications, the native build option
+using SDL backend is available. Invoke the provided build script as:
+
+```
+./build-with-sdl2.sh
+```
