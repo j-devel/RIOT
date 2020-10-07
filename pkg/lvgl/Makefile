@@ -37,4 +37,4 @@ lvgl_hal:
 	"$(MAKE)" -C $(PDIR)/src/lv_hal -f $(TDIR)/lvgl.hal.mk
 
 lvgl_sdl:
-	"$(MAKE)" -C $(TDIR)/lv_sdl -f $(TDIR)/lvgl.sdl.mk
+	"$(MAKE)" -C $(TDIR)/sdl
