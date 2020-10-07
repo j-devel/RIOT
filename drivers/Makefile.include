@@ -64,6 +64,10 @@ ifneq (,$(filter ccs811,$(USEMODULE)))
   USEMODULE_INCLUDES += $(RIOTBASE)/drivers/ccs811/include
 endif
 
+ifneq (,$(filter cst816s,$(USEMODULE)))
+  USEMODULE_INCLUDES += $(RIOTBASE)/drivers/cst816s/include
+endif
+
 ifneq (,$(filter dcf77,$(USEMODULE)))
   USEMODULE_INCLUDES += $(RIOTBASE)/drivers/dcf77/include
 endif
@@ -362,4 +366,8 @@ endif
 
 ifneq (,$(filter xbee,$(USEMODULE)))
   USEMODULE_INCLUDES += $(RIOTBASE)/drivers/xbee/include
+endif
+
+ifneq (,$(filter xpt2046,$(USEMODULE)))
+  USEMODULE_INCLUDES += $(RIOTBASE)/drivers/xpt2046/include
 endif

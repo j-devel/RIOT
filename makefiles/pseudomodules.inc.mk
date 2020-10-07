@@ -53,6 +53,7 @@ PSEUDOMODULES += log
 PSEUDOMODULES += log_printfnoformat
 PSEUDOMODULES += log_color
 PSEUDOMODULES += lora
+PSEUDOMODULES += lvgl
 PSEUDOMODULES += mpu_stack_guard
 PSEUDOMODULES += nanocoap_%
 PSEUDOMODULES += netdev_default

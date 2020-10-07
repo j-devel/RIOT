@@ -45,7 +45,9 @@ extern "C" {
 #define ILI9341_CMD_PASET           0x2b    /**< Page Address Set */
 #define ILI9341_CMD_RAMWR           0x2c    /**< Memory Write */
 #define ILI9341_CMD_RAMRD           0x2e    /**< Memory Read */
+#define ILI9341_CMD_VSCRDEF         0x33    /**< Vertical Scrolling Definition */
 #define ILI9341_CMD_MADCTL          0x36    /**< Memory data access control */
+#define ILI9341_CMD_VSCSAD          0x37    /**< Vertical Scroll Start Addr */
 #define ILI9341_CMD_IDMOFF          0x38    /**< Idle Mode OFF */
 #define ILI9341_CMD_IDMON           0x39    /**< Idle Mode ON */
 #define ILI9341_CMD_PIXSET          0x3A    /**< COLMOD: Pixel Format Set */

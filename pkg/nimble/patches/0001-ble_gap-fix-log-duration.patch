@@ -1,0 +1,25 @@
+From 2b5cf471422fb44c4bbde0db0de4e714af3801bd Mon Sep 17 00:00:00 2001
+From: Koen Zandberg <koen@bergzand.net>
+Date: Tue, 7 Jan 2020 20:38:21 +0100
+Subject: [PATCH 1/2] ble_gap: fix log duration
+
+---
+ nimble/host/src/ble_gap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nimble/host/src/ble_gap.c b/nimble/host/src/ble_gap.c
+index d77d4143..977e8601 100644
+--- a/nimble/host/src/ble_gap.c
++++ b/nimble/host/src/ble_gap.c
+@@ -285,7 +285,7 @@ ble_gap_log_duration(int32_t duration_ms)
+     if (duration_ms == BLE_HS_FOREVER) {
+         BLE_HS_LOG(INFO, "duration=forever");
+     } else {
+-        BLE_HS_LOG(INFO, "duration=%dms", duration_ms);
++        BLE_HS_LOG(INFO, "duration=%ldms", (long int)duration_ms);
+     }
+ }
+ #endif
+-- 
+2.24.1
+

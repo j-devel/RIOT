@@ -183,6 +183,25 @@ void ili9341_invert_on(const ili9341_t *dev);
  */
 void ili9341_invert_off(const ili9341_t *dev);
 
+/**
+ * @brief   Set display brightness
+ *
+ * @param[in]   dev         device descriptor
+ * @param[in]   brightness  brightness value to set
+ */
+void ili9341_set_brightness(const ili9341_t *dev, uint8_t brightness);
+
+/**
+ * @brief   Set display on or off
+ *
+ * @param[in]   dev         device descriptor
+ * @param[in]   enable      whether to enable the sleep mode
+ */
+void ili9341_sleep_mode(ili9341_t *dev, bool enable);
+
+void ili9341_set_fixed_scroll_area(const ili9341_t *dev, uint16_t top,
+                                   uint16_t bottom);
+void ili9341_set_scroll_start(const ili9341_t *dev, uint16_t vsp);
 #ifdef __cplusplus
 }
 #endif

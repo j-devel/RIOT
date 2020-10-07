@@ -149,58 +149,10 @@ int ili9341_init(ili9341_t *dev, const ili9341_params_t *params)
     command_params[0] = 0x55; /* 16 bit mode */
     _write_cmd(dev, ILI9341_CMD_PIXSET, command_params, 1);
 
-
-    command_params[0] = 0x01;
-    _write_cmd(dev, ILI9341_CMD_GAMSET, command_params, 1);
-
-    /* Gamma correction */
-    {
-        static const uint8_t gamma_pos[] = {
-            0x0F,
-            0x31,
-            0x2B,
-            0x0C,
-            0x0E,
-            0x08,
-            0x4E,
-            0xF1,
-            0x37,
-            0x07,
-            0x10,
-            0x03,
-            0x0E,
-            0x09,
-            0x00
-        };
-        _write_cmd(dev, ILI9341_CMD_PGAMCTRL, gamma_pos,
-                   sizeof(gamma_pos));
-    }
-    {
-        static const uint8_t gamma_neg[] = {
-            0x00,
-            0x0E,
-            0x14,
-            0x03,
-            0x11,
-            0x07,
-            0x31,
-            0xC1,
-            0x48,
-            0x08,
-            0x0F,
-            0x0C,
-            0x31,
-            0x36,
-            0x0F
-        };
-        _write_cmd(dev, ILI9341_CMD_NGAMCTRL, gamma_neg,
-                   sizeof(gamma_neg));
-
-    }
-
     if (dev->params->inverted) {
         _write_cmd(dev, ILI9341_CMD_DINVON, NULL, 0);
     }
+
     /* Sleep out (turn off sleep mode) */
     _write_cmd(dev, ILI9341_CMD_SLPOUT, NULL, 0);
     /* Display on */
@@ -314,6 +266,35 @@ void ili9341_invert_off(const ili9341_t *dev)
 void ili9341_set_brightness(const ili9341_t *dev, uint8_t brightness)
 {
     ili9341_write_cmd(dev, ILI9341_CMD_WRDISBV, &brightness, 1);
-    uint8_t param = 0x26;
+    static const uint8_t param = 0x2C;
     ili9341_write_cmd(dev, ILI9341_CMD_WRCTRLD, &param, 1);
+}
+
+void ili9341_sleep_mode(ili9341_t *dev, bool enable)
+{
+    if (enable) {
+        ili9341_write_cmd(dev, ILI9341_CMD_SPLIN, NULL, 0);
+    }
+    else {
+        ili9341_write_cmd(dev, ILI9341_CMD_SLPOUT, NULL, 0);
+        xtimer_usleep(5 * US_PER_MS);
+    }
+}
+
+void ili9341_set_fixed_scroll_area(const ili9341_t *dev, uint16_t top,
+                                   uint16_t bottom)
+{
+    assert((top + bottom) < 320);
+    uint16_t mid = 320 - top - bottom;
+
+    uint16_t data[3] = {htons(top), htons(mid), htons(bottom)};
+
+    ili9341_write_cmd(dev, ILI9341_CMD_VSCRDEF, (uint8_t*)&data, sizeof(data));
+}
+
+void ili9341_set_scroll_start(const ili9341_t *dev, uint16_t vsp)
+{
+    assert(vsp < 320);
+    uint16_t _vsp = htons(vsp);
+    ili9341_write_cmd(dev, ILI9341_CMD_VSCSAD, (uint8_t*)&_vsp, sizeof(_vsp));
 }

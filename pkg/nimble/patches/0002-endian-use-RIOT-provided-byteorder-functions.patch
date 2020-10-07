@@ -1,0 +1,96 @@
+From b267b439766bc6a775c739195dfbabd0eadf4eec Mon Sep 17 00:00:00 2001
+From: Koen Zandberg <koen@bergzand.net>
+Date: Tue, 7 Jan 2020 20:41:50 +0100
+Subject: [PATCH 2/2] endian: use RIOT provided byteorder functions
+
+---
+ porting/nimble/include/os/endian.h | 52 ++----------------------------
+ 1 file changed, 3 insertions(+), 49 deletions(-)
+
+diff --git a/porting/nimble/include/os/endian.h b/porting/nimble/include/os/endian.h
+index e0230756..bc389742 100644
+--- a/porting/nimble/include/os/endian.h
++++ b/porting/nimble/include/os/endian.h
+@@ -6,7 +6,7 @@
+  * to you under the Apache License, Version 2.0 (the
+  * "License"); you may not use this file except in compliance
+  * with the License.  You may obtain a copy of the License at
+- * 
++ *
+  *  http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing,
+@@ -21,6 +21,8 @@
+ #define H_ENDIAN_
+ 
+ #include <inttypes.h>
++/* Use RIOT-provided byteorder functions */
++#include "byteorder.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -55,30 +57,6 @@ extern "C" {
+ 
+ #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+ 
+-#ifndef ntohll
+-#define ntohll(x)  ((uint64_t)(x))
+-#endif
+-
+-#ifndef htonll
+-#define htonll(x)  ((uint64_t)(x))
+-#endif
+-
+-#ifndef ntohl
+-#define ntohl(x)   ((uint32_t)(x))
+-#endif
+-
+-#ifndef htonl
+-#define htonl(x)   ((uint32_t)(x))
+-#endif
+-
+-#ifndef ntohs
+-#define ntohs(x)   ((uint16_t)(x))
+-#endif
+-
+-#ifndef htons
+-#define htons(x)   ((uint16_t)(x))
+-#endif
+-
+ #ifndef htobe16
+ #define htobe16(x) ((uint16_t)(x))
+ #endif
+@@ -129,30 +107,6 @@ extern "C" {
+ 
+ #else
+ 
+-#ifndef ntohll
+-#define ntohll(x)   os_bswap_64(x)
+-#endif
+-
+-#ifndef htonll
+-#define htonll      ntohll
+-#endif
+-
+-#ifndef ntohl
+-#define ntohl(x)    os_bswap_32(x)
+-#endif
+-
+-#ifndef htonl
+-#define htonl       ntohl
+-#endif
+-
+-#ifndef htons
+-#define htons(x)    os_bswap_16(x)
+-#endif
+-
+-#ifndef ntohs
+-#define ntohs       htons
+-#endif
+-
+ #ifndef htobe16
+ #define htobe16(x) os_bswap_16(x)
+ #endif
+-- 
+2.24.1
+

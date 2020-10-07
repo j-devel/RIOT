@@ -1,0 +1,12 @@
+INCLUDES += -I$(PKGDIRBASE)/lvgl
+
+CFLAGS += -Wno-pedantic -Wno-unused-parameter -Wno-sign-compare -Wno-cast-function-type
+
+CFLAGS += -DLV_CONF_INCLUDE_SIMPLE -DLV_LVGL_H_INCLUDE_SIMPLE
+
+# Link SDL if enabled.
+ifneq (,$(filter lvgl_sdl,$(USEMODULE)))
+  INCLUDES += -I$(RIOTPKG)/lvgl/lv_sdl
+  CFLAGS += -DUSE_MONITOR=1 -DUSE_MOUSE=1
+  LINKFLAGS += `sdl2-config --libs`
+endif

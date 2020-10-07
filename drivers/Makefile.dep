@@ -139,6 +139,13 @@ ifneq (,$(filter ccs811,$(USEMODULE)))
   USEMODULE += xtimer
 endif
 
+ifneq (,$(filter cst816s,$(USEMODULE)))
+  FEATURES_REQUIRED += periph_gpio_irq
+  FEATURES_REQUIRED += periph_gpio
+  FEATURES_REQUIRED += periph_i2c
+  USEMODULE += xtimer
+endif
+
 ifneq (,$(filter dcf77,$(USEMODULE)))
   FEATURES_REQUIRED += periph_gpio
   FEATURES_REQUIRED += periph_gpio_irq
@@ -709,10 +716,21 @@ ifneq (,$(filter ws281x,$(USEMODULE)))
   USEMODULE += xtimer
 endif
 
+ifneq (,$(filter lis3mdl,$(USEMODULE)))
+  FEATURES_REQUIRED += periph_i2c
+  USEMODULE += xtimer
+endif
+
 ifneq (,$(filter xbee,$(USEMODULE)))
   FEATURES_REQUIRED += periph_uart
   FEATURES_REQUIRED += periph_gpio
   USEMODULE += ieee802154
   USEMODULE += xtimer
   USEMODULE += netif
+endif
+
+ifneq (,$(filter xpt2046,$(USEMODULE)))
+  FEATURES_REQUIRED += periph_gpio
+  FEATURES_REQUIRED += periph_gpio_irq
+  FEATURES_REQUIRED += periph_spi
 endif
