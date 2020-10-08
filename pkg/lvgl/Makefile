@@ -12,7 +12,10 @@ PDIR = $(PKG_BUILDDIR)
 
 SUBMODS := $(filter lvgl_%,$(USEMODULE))
 
-all: $(SUBMODS)
+all: sdl $(SUBMODS)
+
+sdl:
+	"$(MAKE)" -C $(TDIR)/sdl
 
 # lvgl modules
 lvgl_core:
@@ -35,6 +38,3 @@ lvgl_font:
 
 lvgl_hal:
 	"$(MAKE)" -C $(PDIR)/src/lv_hal -f $(TDIR)/lvgl.hal.mk
-
-lvgl_sdl:
-	"$(MAKE)" -C $(TDIR)/sdl
