@@ -15,7 +15,9 @@ SUBMODS := $(filter lvgl_%,$(USEMODULE))
 all: lvgl_sdl $(SUBMODS)
 
 lvgl_sdl:
+ifeq ($(BOARD),native)
 	"$(MAKE)" -C $(TDIR)/sdl
+endif
 
 # lvgl modules
 lvgl_core:
